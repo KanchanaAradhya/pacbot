@@ -113,7 +113,9 @@ public class StatisticsRepositoryImpl implements StatisticsRepository, Constants
         String ttypesTemp;
         String ttypes = null;
         try{
+        	LOGGER.debug("before fiegn client call, checking the asset fiegnclient value",assetServiceClient.toString());
         AssetApi assetApi = assetServiceClient.getTargetTypeList(assetGroup, domain);
+        LOGGER.debug("after fiegn client call, checking the asset fiegnclient value",assetServiceClient.toString());
         AssetApiData data = assetApi.getData();
         AssetApiName[] targetTypes = data.getTargettypes();
         for (AssetApiName name : targetTypes) {
@@ -126,6 +128,8 @@ public class StatisticsRepositoryImpl implements StatisticsRepository, Constants
         }
         }catch(Exception e){
         	LOGGER.error("error proccessing fiegnclien assetServiceClient",e.getMessage());
+        	LOGGER.error("error asset asset fiegnclient",e);
+        	LOGGER.info("checking the asset fiegnclient value",assetServiceClient);
         	return "";
         }
         return ttypes;

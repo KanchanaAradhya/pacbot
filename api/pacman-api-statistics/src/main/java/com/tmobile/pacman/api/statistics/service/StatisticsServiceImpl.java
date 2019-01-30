@@ -192,7 +192,7 @@ public class StatisticsServiceImpl implements StatisticsService, Constants {
      * com.tmobile.pacman.api.statistics.service.StatisticsService#getStats()
      */
     public List<Map<String, Object>> getStats() throws Exception {
-
+    	LOGGER.info("Inside the getStats method");
         try {
             List<Map<String, Object>> statsList = new ArrayList<>();
             Map<String, Object> data = new HashMap<>();
@@ -261,6 +261,7 @@ public class StatisticsServiceImpl implements StatisticsService, Constants {
         Long totalViolations = 0l;
         Map<String, Long> violationsMap = new HashMap<>();
         JsonParser parser = new JsonParser();
+        LOGGER.debug("checking the compliance fiegnclient value",complianceClient.toString());
         try {
         String distributionStr = complianceClient.getDistributionAsJson(AWS, null);
         if (!Strings.isNullOrEmpty(distributionStr)) {
@@ -269,6 +270,7 @@ public class StatisticsServiceImpl implements StatisticsService, Constants {
             JsonObject distributionJson = dataJson.get("distribution").getAsJsonObject();
             totalViolations = distributionJson.get("total_issues").getAsLong();
             JsonObject severityJson = distributionJson.get("distribution_by_severity").getAsJsonObject();
+            LOGGER.debug("checking the severityJson  value",severityJson);
 				Long critical = 0l;
 				Long high = 0l;
 				Long low = 0l;
@@ -294,6 +296,9 @@ public class StatisticsServiceImpl implements StatisticsService, Constants {
         }
     } catch (Exception e) {
 		LOGGER.error("error processing compliance fiegnclient", e);
+		LOGGER.error("error proccessing fiegnclien complianceServiceClient",e.getMessage());
+    	LOGGER.error("error  compliance fiegnclient",e);
+    	LOGGER.info("checking the compliance fiegnclient value",complianceClient);
 		return violationsMap;
 	}
         return violationsMap;
@@ -314,6 +319,7 @@ public class StatisticsServiceImpl implements StatisticsService, Constants {
         String prevEsStrDate = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String prevDate = dateFormat.format(date.getTime() - MILLIS_IN_DAY);
+      
         if(null==heimdallElasticSearchRepository) {
         	return eventsProcessed;
         }
@@ -344,8 +350,10 @@ public class StatisticsServiceImpl implements StatisticsService, Constants {
         Map<String,Long> totalAssetCountMap = new HashMap<>();
         totalAssetCountMap.put(TOTAL, 0l);
         JsonParser parser = new JsonParser();
+        LOGGER.debug("checking the asset fiegnclient value before calling the client",assetClient.toString());
         try{
         Map<String, Object> assetCounts = assetClient.getTypeCounts(AWS, null, null);
+        LOGGER.debug("checking the asset fiegnclient value after calling the client",assetClient.toString());
         // Get Total Asset Count
         assetCounts.entrySet().stream().forEach(entry->{
 
